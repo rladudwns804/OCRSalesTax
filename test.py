@@ -6,19 +6,26 @@ import re
 import pandas as pd
 
 
+
+#tkinter for opening image file
 root = tk.Tk()
 root.withdraw()
 filename = filedialog.askopenfilename()
-
-
 im = Image.open(filename)
+
+
+
 text = pt.image_to_string(im, lang="eng")
 text.upper()
 substring = "TAX"
+
+#Find substring conting Tax and parse with the tax amount: 
 find = text.find(substring)
 newText = text[find:find+12]
 newText = re.sub("[^.0-9]",'',newText)
 amount = newText.replace(" ", "")
+
+#Load to Dataframe and export as csv:
 df = pd.DataFrame(columns = ["Tax"])
 x = 0
 
