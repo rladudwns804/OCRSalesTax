@@ -6,10 +6,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from bs4 import BeautifulSoup as sp
 import requests as req
-from PIL import Image
 import datetime
-import json
-import codecs
 from apiclient.http import MediaFileUpload
 
 # If modifying these scopes, delete the file token.pickle.
@@ -20,7 +17,6 @@ def main(filename):
     Prints the names and ids of the first 10 files the user has access to.
     """
     creds = None
-    auth = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
@@ -51,11 +47,6 @@ def main(filename):
 	                                media_body=media,
 	                                fields='id').execute()
     print('File ID: %s' % file.get('id') + " has been uploaded")
-  
-
-
-
-
 
 
 if __name__ == '__main__':

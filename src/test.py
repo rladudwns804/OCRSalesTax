@@ -6,6 +6,7 @@ import socket
 import pytesseract as pt
 import re
 import pandas as pd
+import datetime
 
 
 #Prompt user to open image file in system:
@@ -26,16 +27,18 @@ newText = re.sub("[^.0-9]",'',newText)
 amount = newText.replace(" ", "")
 
 #Load to Dataframe and export as csv/excel:
-df = pd.DataFrame(columns = ["Tax"])
+df = pd.DataFrame(columns = ["DateAdded","Tax"])
 x = 0
 
 if len(df) == 0:
     df.loc[x,"Tax"] = amount
-    df.to_csv("sales tax.csv")
+    df.loc[x,"DateAdded"] = datetime.date.today()
+    df.to_excel("salestax.xlsx")
 else:
     x = len(df)
     df.loc[x,"Tax"] = amount
-    df.to_csv("sales tax.csv")
+    df.loc[x,"DateAdded"] = datetime.date.today()
+    df.to_excel("salestax.xlsx")
 
 #Upload image to google drive:
 drive(filename)
