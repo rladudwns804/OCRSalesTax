@@ -9,21 +9,25 @@ import requests as req
 from PIL import Image
 import datetime
 import json
+import codecs
+from apiclient.http import MediaFileUpload
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
-def main():
+def main(filename):
     """Shows basic usage of the Drive v3 API.
     Prints the names and ids of the first 10 files the user has access to.
     """
     creds = None
+    auth = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
+            
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
@@ -32,30 +36,22 @@ def main():
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
+	    
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('drive', 'v3', credentials=creds)
     
-    with open('token.pickle','rb') as token:
-      print(pickle.load(token))
-   
-    media = {'name': open('test.jpg', 'rb')}
-    headers = {'Authorization' : 'Bearer {}'.format(service)}
-    url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=media"
-    r = req.post(url, headers, files=media)
-    #print(r.text)
-
-
-    """
-    media = {'file' : open('test.jpg', 'rb')
-    headers = {'Authorization': 'acess_token'}
-    
-    url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=media"
-    r = req.post(url, files=media)
-    print(r.status_code)
-    """
+    #Upload image file to google drive: 
+    date = datetime.date.today()
+    file_metadata = {'name': '{}'.format(date)}
+    media = MediaFileUpload('{}'.format(filename), mimetype='image/jpeg')
+    file = service.files().create(body=file_metadata,
+	                                media_body=media,
+	                                fields='id').execute()
+    print('File ID: %s' % file.get('id') + " has been uploaded")
+  
 
 
 

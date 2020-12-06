@@ -1,10 +1,11 @@
 from PIL import Image
+from googledrive import main as drive
 import tkinter as tk
 from tkinter import filedialog
+import socket
 import pytesseract as pt
 import re
 import pandas as pd
-import googledrive
 
 
 #Prompt user to open image file in system:
@@ -37,6 +38,5 @@ else:
     df.to_csv("sales tax.csv")
 
 #Upload image to google drive:
-googledrive(im)
-
+drive(filename)
 
